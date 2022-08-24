@@ -3,10 +3,12 @@
 //
 
 #include "log.h"
+#include "utility.h"
 
 #include <time.h>
 #include <stdarg.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 
 Logger* Logger::mInstance = nullptr;
@@ -35,10 +37,16 @@ int Logger::InitLog(LOG_DESTINATION _logDestination) {
         fclose(mFile);
         mFile = nullptr;
     }
-    mFile = fopen((GetTimeString(LINE_FORMAT) + ".log").c_str(), "w");
+    if(access("../log/", F_OK) != 0){
+        mkdir("../log/", 0777);
+    }
+    std::string logFilePath = "../log/" + GetTimeString(LINE_FORMAT) + ".log";
+    mFile = fopen(logFilePath.c_str(), "w");
     if(!mFile){
         return -1;
     }
+
+    CreateLinkToLog(logFilePath);
     pthread_spin_init(&mLock, PTHREAD_PROCESS_PRIVATE);
     mLogDestination = _logDestination;
 
@@ -99,6 +107,15 @@ void * Logger::WriteLogToTerminal(void *_this) {
     /// TODO:
     return nullptr;
 }
+
+void Logger::CreateLinkToLog(const std::string &_logFilePath) {
+    auto processName = GetNameOfProcess();
+    std::string linkName = processName + ".log";
+    unlink(linkName.c_str());
+    symlink(_logFilePath.c_str(), linkName.c_str());  // create a soft link.
+//    link(_logFilePath.c_str(), linkName.c_str());  // This function create a hard link
+}
+
 
 std::string GetTimeString(TIME_STRING_FORMAT _format){
     struct timespec timestamp{0};

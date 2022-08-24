@@ -43,6 +43,10 @@ public:
     **/
     int LogToBuffer(const char *_logLevel, const char *_format, ...);
 
+private:
+    Logger();
+    virtual ~Logger();
+
     /**
     * @brief: Create a thread acquiring data from buffer and write data to destination(file or terminal)
     * @param:
@@ -53,9 +57,9 @@ public:
     int WriteLogToDestination();
 
     /**
-    * @brief:
-    * @param:
-    * @retType:
+    * @brief: Get data from buffer and write it to file.
+    * @param: this pointer.
+    * @retType: void *
     * @retVal:
     * @bug:
     **/
@@ -70,10 +74,15 @@ public:
     **/
     static void* WriteLogToTerminal(void *_this);
 
+    /**
+    * @brief: Create a link binded with newest log file.
+    * @param:
+    * @retType:
+    * @retVal:
+    * @bug:
+    **/
+    static void CreateLinkToLog(const std::string &_logFilePath);
 
-private:
-    Logger();
-    virtual ~Logger();
 
     // member variables
     static Logger *mInstance;  // The unique instance of class Logger;

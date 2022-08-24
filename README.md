@@ -7,4 +7,6 @@
 ## TODO:
 - [ ] Instead the buffer queue by non-lock buffer queue.
 - [ ] Create a new log file when the file obtain 500MB.
-- [ ] Add link file to the newest log file.
+- [x] Add link file to the newest log file.
+- [ ] Add support to windows.
+- [ ] Judging whether the log level greater than set level.
