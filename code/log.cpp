@@ -90,9 +90,12 @@ void* Logger::WriteLogToFile(void *_this) {
     pthread_detach(pthread_self());
     auto pLogger = (Logger*)_this;
     while(true) {
-        while (pLogger->mBuffer.empty()) {
-        }
         pthread_spin_lock(&(pLogger->mLock));
+        if (pLogger->mBuffer.empty()) {
+            pthread_spin_unlock(&(pLogger->mLock));
+            continue;
+        }
+
         auto logContent = pLogger->mBuffer.front();
         pLogger->mBuffer.pop();
         pthread_spin_unlock(&(pLogger->mLock));
