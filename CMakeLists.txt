@@ -25,7 +25,7 @@ add_executable(${PROJECT_NAME}
 # The library that the project dependents to.
 set(LINK_LIB
         pthread
-        libutility.a
+#        libutility.a
         )
 
 #
