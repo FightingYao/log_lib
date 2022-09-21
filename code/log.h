@@ -92,7 +92,14 @@ private:
     LOG_DESTINATION mLogDestination;  // The output destination of log.
 };
 
-
+/**
+* @brief: Get the name of the process.
+* @param:
+* @retType: std::string
+* @retVal: The name of the process.
+* @bug:
+**/
+extern std::string GetNameOfProcess();
 
 /**
 * @brief: Return a string of time by the specify format.

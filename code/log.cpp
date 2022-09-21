@@ -3,7 +3,7 @@
 //
 
 #include "log.h"
-#include "utility.h"
+//#include "utility.h"
 
 #include <time.h>
 #include <stdarg.h>
@@ -141,4 +141,24 @@ std::string GetTimeString(TIME_STRING_FORMAT _format){
         }
     }
     return buffer;
+}
+
+std::string GetNameOfProcess(){
+    pid_t pidSelf = getpid();
+    char processStatusPath[64] = {0};
+    snprintf(processStatusPath, sizeof(processStatusPath), "/proc/%d/status", pidSelf);
+    FILE *pRead = fopen(processStatusPath, "r");
+    if(!pRead){
+        return "";
+    }
+
+    char buffer[128] = {0};
+    fscanf(pRead, "%*s %s", buffer);
+    return buffer;
+    if(!fgets(buffer, sizeof(buffer), pRead)){
+        fclose(pRead);
+        return "";
+    }
+    fclose(pRead);
+
 }
