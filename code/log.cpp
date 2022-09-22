@@ -12,6 +12,7 @@
 
 
 Logger* Logger::mInstance = nullptr;
+int Logger::mBindCpuId = -1;
 
 Logger * Logger::GetInstance() {
     if(!mInstance) {
@@ -89,6 +90,7 @@ int Logger::WriteLogToDestination() {
 void* Logger::WriteLogToFile(void *_this) {
     pthread_detach(pthread_self());
     auto pLogger = (Logger*)_this;
+    BindCpu(pthread_self(), mBindCpuId);
     while(true) {
         pthread_spin_lock(&(pLogger->mLock));
         if (pLogger->mBuffer.empty()) {
@@ -161,4 +163,14 @@ std::string GetNameOfProcess(){
     }
     fclose(pRead);
 
+}
+
+int BindCpu(pthread_t _tid, int _cpuId){
+    cpu_set_t threadCpuSet;
+    CPU_ZERO(&threadCpuSet);
+    CPU_SET(_cpuId, &threadCpuSet);
+    if(pthread_setaffinity_np(_tid, sizeof(threadCpuSet), &threadCpuSet) != 0){
+        return -1;
+    }
+    return 0;
 }

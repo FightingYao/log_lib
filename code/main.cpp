@@ -18,6 +18,7 @@ void* LogThread(void *_arg){
 int main() {
 //    std::cout << GetTimeString(LINE_FORMAT) << std::endl;
 //    std::cout << GetTimeString(SPACE_FORMAT) << std::endl;
+    Logger::SetCpuIdWrite(1);
     INFO("Hello, world!");
 //    printf("11111\n");
 //    auto obj = Logger::GetInstance();
