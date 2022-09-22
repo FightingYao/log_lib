@@ -43,6 +43,16 @@ public:
     **/
     int LogToBuffer(const char *_logLevel, const char *_format, ...);
 
+    /**
+    * @brief:  为写日志线程绑核: Bind core for the thread writing log.
+    * @param:
+    * @ret:
+    * @bug:
+    **/
+    static void SetCpuIdWrite(int _cpuId){
+        mBindCpuId = _cpuId;
+    }
+
 private:
     Logger();
     virtual ~Logger();
@@ -86,6 +96,7 @@ private:
 
     // member variables
     static Logger *mInstance;  // The unique instance of class Logger;
+    static int mBindCpuId;  // The cpuId bound with thread writing log.
     FILE *mFile;  // The file recording the log content.
     pthread_spinlock_t mLock;  // Protect the log in case of multi-thread.
     std::queue<std::string> mBuffer;
@@ -100,6 +111,14 @@ private:
 * @bug:
 **/
 extern std::string GetNameOfProcess();
+
+/**
+* @brief:
+* @param:
+* @ret:
+* @bug:
+**/
+int BindCpu(pthread_t tid, int _cpuId);
 
 /**
 * @brief: Return a string of time by the specify format.
